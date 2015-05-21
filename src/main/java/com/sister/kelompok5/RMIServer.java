@@ -8,10 +8,10 @@ public class RMIServer {
 	private void startServer(){
         try {        
             /*
-             * register server in port 5000 and bind as service named "Echo"
+             * register server in port 5000 and bind as service named "ConvertColor"
              */
             Registry registry = LocateRegistry.createRegistry(5000);                        
-            registry.rebind("Echo", new Message());
+            registry.rebind("ConvertColor", new Message());
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }      
