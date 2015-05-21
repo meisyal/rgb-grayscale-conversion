@@ -1,7 +1,12 @@
 package com.sister.kelompok5;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+
+import javax.imageio.ImageIO;
 
 public class RMIClient {
 
@@ -12,9 +17,50 @@ public class RMIClient {
              * looking for service named "Echo", call remote method
              */
             Registry registry = LocateRegistry.getRegistry("127.0.0.1", 5000);					
-            MessageInterface message = (MessageInterface) registry.lookup("Echo");						
-            message.Echo("Hi server ...");			
-            System.out.println("Message sent to server");
+            MessageInterface message = (MessageInterface) registry.lookup("ConvertColor");
+            
+            // Full file path
+            String imagePath = "";
+            File path = new File(imagePath);
+            
+            // File list
+            String[] files = path.list();
+            
+            // Number of files
+            int numOfFiles = files.length;
+            
+            // Initialize byte array
+            byte[] images;
+            
+            for (int i = 0; i < numOfFiles; i++) {
+            	// Image file will send to server
+            	String fileIndex = files[i];
+            	File sendFile = new File(imagePath + "/" + fileIndex);
+            	
+            	// Using regex to remove file extensions
+            	String fileName = fileIndex.replaceFirst("[.][^.]+$", "");
+            	
+            	// Get file extesions
+            	String fileExtension = fileIndex.substring(fileIndex.lastIndexOf('.')+1);
+            	
+            	BufferedImage img = ImageIO.read(sendFile);
+            	
+            	ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            	ImageIO.write(img, fileExtension, baos);
+            	images = new byte[baos.size()];
+            	images = baos.toByteArray();
+            	
+            	int fileNumber = i + 1;
+            	
+            	// Call method to start converting color
+            	message.Convert(images, fileNumber, fileName, fileExtension);
+            	
+            	// Printing message reply as log
+            	System.out.println("Ukuran byte array: " + images.length);
+    			System.out.println("Ukuran file: " + sendFile.length());
+    			System.out.println(fileNumber + ". " + fileName + " berhasil dikirim\n");
+            }
+            
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }        
