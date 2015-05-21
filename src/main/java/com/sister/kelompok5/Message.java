@@ -9,6 +9,11 @@ import java.rmi.server.UnicastRemoteObject;
 
 public class Message extends UnicastRemoteObject implements MessageInterface {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public Message() throws RemoteException {        
     }
     
