@@ -1,6 +1,7 @@
 package com.sister.kelompok5;
 
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.rmi.registry.LocateRegistry;
@@ -53,12 +54,20 @@ public class RMIClient {
             	int fileNumber = i + 1;
             	
             	// Call method to start converting color
-            	message.Convert(images, fileNumber, fileName, fileExtension);
+            	byte[] imageOut = message.Convert(images, fileNumber, fileName, fileExtension);
             	
             	// Printing message reply as log
             	System.out.println("Ukuran byte array: " + images.length);
     			System.out.println("Ukuran file: " + sendFile.length());
     			System.out.println(fileNumber + ". " + fileName + " berhasil dikirim\n");
+    			
+    			// Construct image like before
+    			BufferedImage image = ImageIO.read(new ByteArrayInputStream(imageOut));
+    			String pathNewFile = "";
+    				
+    			File destinationPath = new File(pathNewFile + fileNumber + "_" + fileName + "_grayscale." + fileExtension);
+    				
+    			ImageIO.write(image, fileExtension, destinationPath);
             }
             
         } catch (Exception e) {
