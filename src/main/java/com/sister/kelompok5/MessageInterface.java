@@ -10,5 +10,5 @@ import java.rmi.RemoteException;
 
 public interface MessageInterface extends Remote {
     //void Echo(String name) throws RemoteException;
-	void Convert(byte[] imageByteArray, int fileNumber, String fileName, String fileExtension) throws RemoteException, IOException;
+	byte[] Convert(byte[] imageByteArray, int fileNumber, String fileName, String fileExtension) throws RemoteException, IOException;
 }
