@@ -8,7 +8,6 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -25,7 +24,7 @@ public class Message extends UnicastRemoteObject implements MessageInterface {
 	public Message() throws RemoteException {        
     }
 
-	public void Convert(byte[] imageByteArray, int fileNumber, String fileName, String fileExtension) throws IOException {
+	public byte[] Convert(byte[] imageByteArray, int fileNumber, String fileName, String fileExtension) throws IOException {
 		// Handle byte array of image input
 		BufferedImage imageIn = ImageIO.read(new ByteArrayInputStream(imageByteArray));
 		
@@ -52,13 +51,7 @@ public class Message extends UnicastRemoteObject implements MessageInterface {
 		
 		byte[] imageOut = baos.toByteArray();
 		
-		// Construct image like before
-		BufferedImage image = ImageIO.read(new ByteArrayInputStream(imageOut));
-		String pathNewFile = "";
-			
-		File path = new File(pathNewFile + fileNumber + "_" + fileName + "_grayscale." + fileExtension);
-			
-		ImageIO.write(image, fileExtension, path);
+		return imageOut;
 	}
     
 }
