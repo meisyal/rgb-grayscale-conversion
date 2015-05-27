@@ -11,13 +11,13 @@ import javax.imageio.ImageIO;
 
 public class RMIClient {
 
-	private void sendMessage(){
+	private Thread sendMessage(String worker, int index) {
         try {			
             /*
              * set to RMI server address and port
              * looking for service named "Echo", call remote method
              */
-            Registry registry = LocateRegistry.getRegistry("127.0.0.1", 5000);					
+            Registry registry = LocateRegistry.getRegistry(worker, 5000);					
             MessageInterface message = (MessageInterface) registry.lookup("ConvertColor");
             
             // Full file path
@@ -33,7 +33,7 @@ public class RMIClient {
             // Initialize byte array
             byte[] images;
             
-            for (int i = 0; i < numOfFiles; i++) {
+            for (int i = index; i < numOfFiles; i+=4) {
             	// Image file will send to server
             	String fileIndex = files[i];
             	File sendFile = new File(imagePath + "/" + fileIndex);
@@ -72,12 +72,19 @@ public class RMIClient {
             
         } catch (Exception e) {
             System.out.println(e.getMessage());
-        }        
+        }
+		return null;        
     }
     
     public static void main(String[] args) {
         RMIClient main = new RMIClient();
-        main.sendMessage();
+        
+        String[] worker = {"127.0.0.1", "127.0.0.1"};
+        
+        for (int i = 0; i < 4; i++) {
+        	Thread work = main.sendMessage(worker[i%2], i + 1);
+        	work.start();
+        }
     }
     
 }
