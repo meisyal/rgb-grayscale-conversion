@@ -93,10 +93,17 @@ public class RMIClient {
         
         String[] worker = {"127.0.0.1", "127.0.0.1"};
         
+        long Start = System.currentTimeMillis();
+        
         for (int i = 0; i < 2; i++) {
         	ThreadWorker t1 = new ThreadWorker(worker[i%2], i + 1);
         	t1.run();
         }
+        
+        long Stop = System.currentTimeMillis();
+		long Elapsed = (Stop - Start) / 1000 * 60;
+		
+		System.out.println("total time: " + Elapsed + " minute(s)");
     }
     
 }
