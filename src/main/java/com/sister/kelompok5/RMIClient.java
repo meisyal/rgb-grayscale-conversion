@@ -9,9 +9,18 @@ import java.rmi.registry.Registry;
 
 import javax.imageio.ImageIO;
 
-public class RMIClient {
+class ThreadWorker extends Thread {
+	private String worker;
+	private int index;
 
-	private Thread sendMessage(String worker, int index) {
+	ThreadWorker(String server, int idx) {
+		this.worker = server;
+		this.index = idx;
+		
+		System.out.println("Sending to " + worker);
+	}
+	
+	public void run() {
         try {			
             /*
              * set to RMI server address and port
@@ -33,7 +42,7 @@ public class RMIClient {
             // Initialize byte array
             byte[] images;
             
-            for (int i = index; i < numOfFiles; i+=4) {
+            for (int i = index - 1; i < numOfFiles; i+=2) {
             	// Image file will send to server
             	String fileIndex = files[i];
             	File sendFile = new File(imagePath + "/" + fileIndex);
@@ -72,18 +81,21 @@ public class RMIClient {
             
         } catch (Exception e) {
             System.out.println(e.getMessage());
-        }
-		return null;        
+        }      
     }
-    
+
+}
+
+public class RMIClient {
+	
     public static void main(String[] args) {
-        RMIClient main = new RMIClient();
+        //RMIClient main = new RMIClient();
         
         String[] worker = {"127.0.0.1", "127.0.0.1"};
         
-        for (int i = 0; i < 4; i++) {
-        	Thread work = main.sendMessage(worker[i%2], i + 1);
-        	work.start();
+        for (int i = 0; i < 2; i++) {
+        	ThreadWorker t1 = new ThreadWorker(worker[i%2], i + 1);
+        	t1.run();
         }
     }
     
